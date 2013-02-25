@@ -23,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends JFrame {
   
   private JTable _table;
-
+  
   public MainFrame() throws IOException {
     initGUI();
   }
@@ -35,7 +35,7 @@ public class MainFrame extends JFrame {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
     setLayout(new BorderLayout());
-
+    
     // Hex view
     _table = new JTable(new HexViewTableModel(null));
     _table.setFont(new Font("Courier New", _table.getFont().getStyle(), _table.getFont().getSize()));
@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
     JScrollPane sp = new JScrollPane(_table);
     sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     add(sp, BorderLayout.CENTER);
-
+    
     // Menu
     JMenuBar mb = new JMenuBar();
     JMenu m = new JMenu("File");
@@ -73,6 +73,9 @@ public class MainFrame extends JFrame {
     m.add(mi);
     mb.add(m);
     setJMenuBar(mb);
+    
+    // Finalize window
+    setVisible(true);
   }
   
   private void fixWidth(TableColumnModel cm, int index, int width) {
@@ -80,19 +83,18 @@ public class MainFrame extends JFrame {
     cm.getColumn(index).setPreferredWidth(width);
     cm.getColumn(index).setMaxWidth(width);
   }
-
+  
   public static void main(String[] args) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
         try {
-          MainFrame mf = new MainFrame();
-          mf.setVisible(true);
+          new MainFrame();
         } catch(IOException ex) {
           // TODO: Show message
         }
       }
     });
   }
-
+  
 }

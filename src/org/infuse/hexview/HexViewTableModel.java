@@ -11,7 +11,7 @@ public class HexViewTableModel extends AbstractTableModel {
   
   private byte[] _data;
   private final String[] _names = new String[] { "Offset", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "0D", "0E", "0F", "Ascii" };
-
+  
   public HexViewTableModel(File f) throws IOException {
     setFile(f);
   }
@@ -26,17 +26,17 @@ public class HexViewTableModel extends AbstractTableModel {
       input.close();
     }
   }
-
+  
   @Override
   public int getRowCount() {
     return (_data.length / 16) + ((_data.length % 16) > 1 ? 1 : 0);
   }
-
+  
   @Override
   public int getColumnCount() {
     return _names.length;
   }
-
+  
   @Override
   public String getColumnName(int columnIndex) {
     if (columnIndex >= _names.length) {
@@ -50,7 +50,7 @@ public class HexViewTableModel extends AbstractTableModel {
   public boolean isCellEditable(int rowIndex, int columnIndex) {
     return false;
   }
-
+  
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     if (columnIndex == 0) {
@@ -77,5 +77,5 @@ public class HexViewTableModel extends AbstractTableModel {
       }
     }
   }
-
+  
 }
