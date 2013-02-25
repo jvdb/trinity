@@ -63,6 +63,7 @@ public class MainFrame extends JFrame {
           if (sf.exists() && !sf.isDirectory()) {
             try {
               ((HexViewTableModel)MainFrame.this._table.getModel()).setFile(sf);
+              MainFrame.this._table.revalidate();
             } catch (IOException ex) {
               // TODO: Show message
             }
