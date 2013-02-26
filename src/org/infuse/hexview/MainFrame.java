@@ -1,6 +1,7 @@
 package org.infuse.hexview;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
@@ -28,7 +30,7 @@ public class MainFrame extends JFrame {
   private void initGUI() throws IOException {
     // Main window
     setTitle("hexview");
-    setSize(568, 320);
+    setSize(1280, 320);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
     setLayout(new BorderLayout());
@@ -37,7 +39,8 @@ public class MainFrame extends JFrame {
     _table = new HexViewTable();
     JScrollPane sp = new JScrollPane(_table);
     sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    add(sp, BorderLayout.CENTER);
+    sp.setPreferredSize(new Dimension(_table.getPreferredSize().width+24, _table.getPreferredSize().height));
+    add(sp, BorderLayout.WEST);
     
     // Menu
     JMenuBar mb = new JMenuBar();

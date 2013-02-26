@@ -13,9 +13,9 @@ public class HexViewTable extends JTable {
     setModel(new HexViewTableModel(null));
     setFont(new Font("Courier New", getFont().getStyle(), getFont().getSize()));
     TableColumnModel cm = getColumnModel();
-    fixWidth(cm, 0, 80);
-    for (int i = 1; i < 17; i++) { fixWidth(cm, i, 22); }
-    cm.getColumn(17).setMinWidth(80);
+    fixWidth(cm, 0, 61);
+    for (int i = 1; i < 17; i++) { fixWidth(cm, i, 21); }
+    cm.getColumn(17).setMinWidth(115);
     setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     setFillsViewportHeight(true);
   }
