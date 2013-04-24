@@ -5,10 +5,13 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.derric_lang.validator.interpreter.FieldMatch;
+import org.derric_lang.validator.interpreter.SourceLocation;
 import org.derric_lang.validator.interpreter.StructureMatch;
 import org.eclipse.imp.pdb.facts.IBool;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
+import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.ITuple;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
@@ -47,6 +50,21 @@ public class Interpreter {
     private List<StructureMatch> buildMatches(IList matches) {
         ArrayList<StructureMatch> out = new ArrayList<StructureMatch>();
         for (int i = 0; i < matches.length(); i++) {
+            ITuple item = (ITuple)matches.get(i);
+            String structureName = ((IString)item.get(0)).getValue();
+            SourceLocation seqLoc = new SourceLocation(((ISourceLocation)item.get(1)).getURI(), ((ISourceLocation)item.get(1)).getOffset(), ((ISourceLocation)item.get(1)).getLength());
+            SourceLocation strLoc = new SourceLocation(((ISourceLocation)item.get(2)).getURI(), ((ISourceLocation)item.get(2)).getOffset(), ((ISourceLocation)item.get(2)).getLength());
+            SourceLocation datLoc = new SourceLocation(((ISourceLocation)item.get(3)).getURI(), ((ISourceLocation)item.get(3)).getOffset(), ((ISourceLocation)item.get(3)).getLength());
+            IList fieldData = (IList)item.get(4);
+            ArrayList<FieldMatch> fields = new ArrayList<FieldMatch>();
+            for (int j = 0; j < fieldData.length(); j++) {
+                ITuple fitem = (ITuple)fieldData.get(j);
+                String fname = ((IString)fitem.get(0)).getValue();
+                SourceLocation fstrLoc = new SourceLocation(((ISourceLocation)fitem.get(1)).getURI(), ((ISourceLocation)fitem.get(1)).getOffset(), ((ISourceLocation)fitem.get(1)).getLength());
+                SourceLocation fdatLoc = new SourceLocation(((ISourceLocation)fitem.get(2)).getURI(), ((ISourceLocation)fitem.get(2)).getOffset(), ((ISourceLocation)fitem.get(2)).getLength());
+                fields.add(new FieldMatch(fname, fstrLoc, fdatLoc));
+            }
+            out.add(new StructureMatch(structureName, seqLoc, strLoc, datLoc, fields));
         }
         return out;
     }

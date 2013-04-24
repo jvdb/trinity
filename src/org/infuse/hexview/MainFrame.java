@@ -20,18 +20,26 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     
+    private final Interpreter _interpreter;
+
     private HexViewTable _hexView;
     private CodeEditorPane _codeView;
+
     private File _codeFile;
     private File _dataFile;
-    private final Interpreter _interpreter;
+    private Sentence _current;
     
     public MainFrame() throws IOException {
         _interpreter = new Interpreter();
@@ -48,12 +56,20 @@ public class MainFrame extends JFrame {
         
         // Hex view
         _hexView = new HexViewTable();
+        _hexView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane tsp = new JScrollPane(_hexView);
         tsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         tsp.setPreferredSize(new Dimension(
                 _hexView.getPreferredSize().width + 24,
                 _hexView.getPreferredSize().height));
         add(tsp, BorderLayout.WEST);
+        _hexView.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int col = _hexView.getSelectedColumn();
+                int row = _hexView.getSelectedRow();
+            } 
+        });
         
         _codeView = new CodeEditorPane();
         _codeView.setKeywordColor(getDerricColors());
@@ -61,6 +77,13 @@ public class MainFrame extends JFrame {
         JScrollPane esp = new JScrollPane(_codeView);
         esp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         add(esp, BorderLayout.CENTER);
+        _codeView.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                int offset = e.getDot();
+                int length = e.getMark() - offset;
+            }
+        });
         
         // Menu
         JMenuBar mb = new JMenuBar();
@@ -97,7 +120,8 @@ public class MainFrame extends JFrame {
                 _codeView.setText(sb.toString());
                 _dataFile = getFile(null);
                 if (_dataFile != null) {
-                    _interpreter.run(_codeFile.getPath(), _dataFile.getPath());
+                    _current = _interpreter.run(_codeFile.getPath(), _dataFile.getPath());
+                    setTitle(_codeFile.getName() + " on " + _dataFile.getName() + " results in: " + (_current.isValidated ? "Validated!" : "Not validated!"));
                     ((HexViewTableModel) _hexView.getModel()).setFile(_dataFile);
                     _hexView.revalidate();
                 }
