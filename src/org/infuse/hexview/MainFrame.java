@@ -27,10 +27,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     
-    private HexViewTable _table;
-    private CodeEditorPane _editor;
+    private HexViewTable _hexView;
+    private CodeEditorPane _codeView;
+    private File _codeFile;
+    private File _dataFile;
+    private final Interpreter _interpreter;
     
     public MainFrame() throws IOException {
+        _interpreter = new Interpreter();
         initGUI();
     }
     
@@ -43,18 +47,18 @@ public class MainFrame extends JFrame {
         setLayout(new BorderLayout());
         
         // Hex view
-        _table = new HexViewTable();
-        JScrollPane tsp = new JScrollPane(_table);
+        _hexView = new HexViewTable();
+        JScrollPane tsp = new JScrollPane(_hexView);
         tsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         tsp.setPreferredSize(new Dimension(
-                _table.getPreferredSize().width + 24,
-                _table.getPreferredSize().height));
+                _hexView.getPreferredSize().width + 24,
+                _hexView.getPreferredSize().height));
         add(tsp, BorderLayout.WEST);
         
-        _editor = new CodeEditorPane();
-        _editor.setKeywordColor(getDerricColors());
-        _editor.setVerticalLineAtPos(80);
-        JScrollPane esp = new JScrollPane(_editor);
+        _codeView = new CodeEditorPane();
+        _codeView.setKeywordColor(getDerricColors());
+        _codeView.setVerticalLineAtPos(80);
+        JScrollPane esp = new JScrollPane(_codeView);
         esp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         add(esp, BorderLayout.CENTER);
         
@@ -81,20 +85,21 @@ public class MainFrame extends JFrame {
         try {
             FileNameExtensionFilter derricFilter = new FileNameExtensionFilter(
                     "Derric descriptions", "derric");
-            File desc = getFile(derricFilter);
-            if (desc != null) {
+            _codeFile = getFile(derricFilter);
+            if (_codeFile != null) {
                 List<String> lines = java.nio.file.Files.readAllLines(
-                        Paths.get(desc.getPath()), Charset.forName("UTF8"));
+                        Paths.get(_codeFile.getPath()), Charset.forName("UTF8"));
                 StringBuilder sb = new StringBuilder();
                 for (String line : lines) {
                     sb.append(line);
                     sb.append("\n");
                 }
-                _editor.setText(sb.toString());
-                File bin = getFile(null);
-                if (bin != null) {
-                    ((HexViewTableModel) _table.getModel()).setFile(bin);
-                    _table.revalidate();
+                _codeView.setText(sb.toString());
+                _dataFile = getFile(null);
+                if (_dataFile != null) {
+                    _interpreter.run(_codeFile.getPath(), _dataFile.getPath());
+                    ((HexViewTableModel) _hexView.getModel()).setFile(_dataFile);
+                    _hexView.revalidate();
                 }
             }
         } catch (IOException e) {
