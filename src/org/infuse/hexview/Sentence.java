@@ -13,5 +13,14 @@ public class Sentence {
         this.isValidated = validated;
         this.matches = matches;
     }
+    
+    public StructureMatch getDataMatch(int offset) {
+        for (StructureMatch m : matches) {
+            if (m.inputLocation.getOffset() <= offset && (m.inputLocation.getOffset() + m.inputLocation.getLength()) > offset) {
+                return m;
+            }
+        }
+        return null;
+    }
 
 }

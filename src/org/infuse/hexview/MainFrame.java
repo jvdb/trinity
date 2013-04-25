@@ -29,6 +29,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.derric_lang.validator.interpreter.StructureMatch;
+
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     
@@ -59,18 +61,25 @@ public class MainFrame extends JFrame {
         _hexView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane tsp = new JScrollPane(_hexView);
         tsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        tsp.setPreferredSize(new Dimension(
-                _hexView.getPreferredSize().width + 24,
-                _hexView.getPreferredSize().height));
+        tsp.setPreferredSize(new Dimension(_hexView.getPreferredSize().width + 24, _hexView.getPreferredSize().height));
         add(tsp, BorderLayout.WEST);
-        _hexView.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        ListSelectionListener sl = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                int col = _hexView.getSelectedColumn();
-                int row = _hexView.getSelectedRow();
+                if (!e.getValueIsAdjusting()) {
+                    if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() < HexViewTableModel.WIDTH) {
+                        int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
+                        StructureMatch match = _current.getDataMatch(offset);
+                        setHighlights(match);
+                    } else {
+                        setHighlights(null);
+                    }
+                }
             } 
-        });
-        
+        };
+        _hexView.getSelectionModel().addListSelectionListener(sl);
+        _hexView.getColumnModel().getSelectionModel().addListSelectionListener(sl);
+                
         _codeView = new CodeEditorPane();
         _codeView.setKeywordColor(getDerricColors());
         _codeView.setVerticalLineAtPos(80);
@@ -80,8 +89,8 @@ public class MainFrame extends JFrame {
         _codeView.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                int offset = e.getDot();
-                int length = e.getMark() - offset;
+                //int offset = e.getDot();
+                //int length = e.getMark() - offset;
             }
         });
         
@@ -148,6 +157,16 @@ public class MainFrame extends JFrame {
     private HashMap<String, Color> getDerricColors() {
         HashMap<String, Color> syntax = new HashMap<String, Color>();
         return syntax;
+    }
+    
+    private void setHighlights(StructureMatch match) {
+        if (match == null) {
+            _hexView._renderer.setSelection(0, 0);
+            _codeView.getHighlighter().removeAllHighlights();
+        } else {
+            _hexView._renderer.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
+        }
+        _hexView.repaint();
     }
     
     public static void main(String[] args) {

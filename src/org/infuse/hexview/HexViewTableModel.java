@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class HexViewTableModel extends AbstractTableModel {
     
-    public final int WIDTH = 16;
+    public static final int WIDTH = 16;
     
     private byte[] _data;
     private final String[] _names = new String[] {

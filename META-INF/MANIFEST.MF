@@ -57,3 +57,4 @@ Export-Package: javax.swing,
  org.jdesktop.swingx.util
 Require-Bundle: rascal;bundle-version="0.5.4",
  org.eclipse.imp.pdb.values;bundle-version="0.3.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
