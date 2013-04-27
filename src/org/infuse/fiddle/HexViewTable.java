@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.io.IOException;
 
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
@@ -13,6 +14,7 @@ public class HexViewTable extends JTable {
     public final HighlightTableCellRenderer _renderer;
     
     public HexViewTable() throws IOException {
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setModel(new HexViewTableModel(null));
         setFont(new Font("Courier New", getFont().getStyle(), getFont().getSize()));
         TableColumnModel cm = getColumnModel();
@@ -36,6 +38,10 @@ public class HexViewTable extends JTable {
     @Override
     public TableCellRenderer getCellRenderer(int row, int column) {
         return _renderer;
+    }
+    
+    public void setSelection(int offset, int length) {
+        _renderer.setSelection(offset, length);
     }
     
 }

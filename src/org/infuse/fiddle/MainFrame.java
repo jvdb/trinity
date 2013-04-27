@@ -20,7 +20,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -57,7 +56,6 @@ public class MainFrame extends JFrame {
         
         // Hex view
         _hexView = new HexViewTable();
-        _hexView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane tsp = new JScrollPane(_hexView);
         tsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         tsp.setPreferredSize(new Dimension(_hexView.getPreferredSize().width + 24, _hexView.getPreferredSize().height));
@@ -69,16 +67,17 @@ public class MainFrame extends JFrame {
                     if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() < HexViewTableModel.WIDTH) {
                         int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
                         StructureMatch match = _current.getDataMatch(offset);
-                        setHighlights(match);
+                        setHighlightsFromHexView(match);
                     } else {
-                        setHighlights(null);
+                        clearHighlights();
                     }
                 }
             } 
         };
         _hexView.getSelectionModel().addListSelectionListener(sl);
         _hexView.getColumnModel().getSelectionModel().addListSelectionListener(sl);
-                
+        
+        // Code view
         _codeView = new CodeEditorPane();
         _codeView.setKeywordColor(getDerricColors());
         _codeView.setVerticalLineAtPos(80);
@@ -114,12 +113,10 @@ public class MainFrame extends JFrame {
     
     private void chooseFiles() {
         try {
-            FileNameExtensionFilter derricFilter = new FileNameExtensionFilter(
-                    "Derric descriptions", "derric");
+            FileNameExtensionFilter derricFilter = new FileNameExtensionFilter("Derric descriptions", "derric");
             _codeFile = getFile(derricFilter);
             if (_codeFile != null) {
-                List<String> lines = java.nio.file.Files.readAllLines(
-                        Paths.get(_codeFile.getPath()), Charset.forName("UTF8"));
+                List<String> lines = java.nio.file.Files.readAllLines(Paths.get(_codeFile.getPath()), Charset.forName("UTF8"));
                 StringBuilder sb = new StringBuilder();
                 for (String line : lines) {
                     sb.append(line);
@@ -158,14 +155,18 @@ public class MainFrame extends JFrame {
         return syntax;
     }
     
-    private void setHighlights(StructureMatch match) {
+    private void setHighlightsFromHexView(StructureMatch match) {
         if (match == null) {
-            _hexView._renderer.setSelection(0, 0);
-            _codeView.getHighlighter().removeAllHighlights();
+            clearHighlights();
         } else {
-            _hexView._renderer.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
+            _hexView.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
         }
         _hexView.repaint();
+    }
+    
+    private void clearHighlights() {
+        _hexView.setSelection(0, 0);
+        _codeView.getHighlighter().removeAllHighlights();
     }
     
 }
