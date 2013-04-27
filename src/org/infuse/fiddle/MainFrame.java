@@ -26,6 +26,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultHighlighter;
 
 import org.derric_lang.validator.interpreter.StructureMatch;
 
@@ -159,7 +160,15 @@ public class MainFrame extends JFrame {
         if (match == null) {
             clearHighlights();
         } else {
-            _hexView.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
+            try {
+                _hexView.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
+                _codeView.getHighlighter().removeAllHighlights();
+                DefaultHighlighter.DefaultHighlightPainter hl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+                _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), hl);
+                _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), hl);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
         _hexView.repaint();
     }
