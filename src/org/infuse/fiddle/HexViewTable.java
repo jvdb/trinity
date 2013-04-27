@@ -1,4 +1,4 @@
-package org.infuse.hexview;
+package org.infuse.fiddle;
 
 import java.awt.Font;
 import java.io.IOException;

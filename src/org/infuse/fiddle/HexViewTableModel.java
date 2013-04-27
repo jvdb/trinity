@@ -1,4 +1,4 @@
-package org.infuse.hexview;
+package org.infuse.fiddle;
 
 import java.io.File;
 import java.io.FileInputStream;

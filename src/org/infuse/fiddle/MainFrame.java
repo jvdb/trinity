@@ -1,4 +1,4 @@
-package org.infuse.hexview;
+package org.infuse.fiddle;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,7 +22,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ListSelectionEvent;
@@ -167,19 +166,6 @@ public class MainFrame extends JFrame {
             _hexView._renderer.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
         }
         _hexView.repaint();
-    }
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new MainFrame();
-                } catch (IOException ex) {
-                    // TODO: Show message
-                }
-            }
-        });
     }
     
 }

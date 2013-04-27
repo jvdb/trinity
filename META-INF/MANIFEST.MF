@@ -7,7 +7,7 @@ Bundle-ClassPath: fiddle.jar,
  lib/JXTextPane.jar,
  lib/swingx-1.6.1.jar
 Export-Package: javax.swing,
- org.infuse.hexview,
+ org.infuse.fiddle,
  org.jdesktop.beans,
  org.jdesktop.swingx,
  org.jdesktop.swingx.action,
