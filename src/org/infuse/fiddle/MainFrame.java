@@ -88,8 +88,9 @@ public class MainFrame extends JFrame {
         _codeView.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                //int offset = e.getDot();
-                //int length = e.getMark() - offset;
+                if (_current != null) {
+                    setHighlightsFromHexView(_current.getCodeMatch(e.getDot()));
+                }
             }
         });
         

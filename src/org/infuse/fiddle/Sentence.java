@@ -22,5 +22,14 @@ public class Sentence {
         }
         return null;
     }
+    
+    public StructureMatch getCodeMatch(int offset) {
+        for (StructureMatch m : matches) {
+            if ((m.sequenceLocation.getOffset() <= offset && (m.sequenceLocation.getOffset() + m.sequenceLocation.getLength()) > offset) || (m.structureLocation.getOffset() <= offset && (m.structureLocation.getOffset() + m.structureLocation.getLength()) > offset)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
 }
