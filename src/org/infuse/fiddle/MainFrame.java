@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() < HexViewTableModel.WIDTH) {
+                    if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
                         int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
                         StructureMatch match = _current.getDataMatch(offset);
                         setHighlightsFromHexView(match);
@@ -157,25 +157,24 @@ public class MainFrame extends JFrame {
     }
     
     private void setHighlightsFromHexView(StructureMatch match) {
-        if (match == null) {
-            clearHighlights();
-        } else {
+        if (match != null) {
             try {
                 _hexView.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
                 _codeView.getHighlighter().removeAllHighlights();
                 DefaultHighlighter.DefaultHighlightPainter hl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
                 _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), hl);
                 _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), hl);
+                _hexView.repaint();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
-        _hexView.repaint();
     }
     
     private void clearHighlights() {
         _hexView.setSelection(0, 0);
         _codeView.getHighlighter().removeAllHighlights();
+        _hexView.repaint();
     }
     
 }
