@@ -42,6 +42,8 @@ public class MainFrame extends JFrame {
     private File _dataFile;
     private Sentence _current;
     
+    private DefaultHighlighter.DefaultHighlightPainter _hl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+    
     public MainFrame() throws IOException {
         _interpreter = new Interpreter();
         initGUI();
@@ -72,6 +74,7 @@ public class MainFrame extends JFrame {
                     } else {
                         clearHighlights();
                     }
+                    _hexView.repaint();
                 }
             } 
         };
@@ -89,7 +92,9 @@ public class MainFrame extends JFrame {
             @Override
             public void caretUpdate(CaretEvent e) {
                 if (_current != null) {
-                    setHighlightsFromHexView(_current.getCodeMatch(e.getDot()));
+                    StructureMatch[] matches = _current.getCodeMatches(e.getDot());
+                    setHighlightsFromCodeView(matches);
+                    _hexView.repaint();
                 }
             }
         });
@@ -159,13 +164,24 @@ public class MainFrame extends JFrame {
     
     private void setHighlightsFromHexView(StructureMatch match) {
         if (match != null) {
+            clearHighlights();
+            setHighlight(match);
+        }
+    }
+    
+    private void setHighlightsFromCodeView(StructureMatch[] matches) {
+        clearHighlights();
+        for (StructureMatch m : matches) {
+            setHighlight(m);
+        }
+    }
+    
+    private void setHighlight(StructureMatch match) {
+        if (match != null) {
             try {
-                _hexView.setSelection(match.inputLocation.getOffset(), match.inputLocation.getLength());
-                _codeView.getHighlighter().removeAllHighlights();
-                DefaultHighlighter.DefaultHighlightPainter hl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-                _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), hl);
-                _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), hl);
-                _hexView.repaint();
+                _hexView.addHighlight(match.inputLocation.getOffset(), match.inputLocation.getLength());
+                _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), _hl);
+                _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), _hl);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -173,9 +189,8 @@ public class MainFrame extends JFrame {
     }
     
     private void clearHighlights() {
-        _hexView.setSelection(0, 0);
+        _hexView.clearHighlights();
         _codeView.getHighlighter().removeAllHighlights();
-        _hexView.repaint();
     }
     
 }

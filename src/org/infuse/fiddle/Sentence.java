@@ -1,5 +1,6 @@
 package org.infuse.fiddle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.derric_lang.validator.interpreter.StructureMatch;
@@ -23,13 +24,14 @@ public class Sentence {
         return null;
     }
     
-    public StructureMatch getCodeMatch(int offset) {
+    public StructureMatch[] getCodeMatches(int offset) {
+        ArrayList<StructureMatch> ms = new ArrayList<StructureMatch>();
         for (StructureMatch m : matches) {
             if ((m.sequenceLocation.getOffset() <= offset && (m.sequenceLocation.getOffset() + m.sequenceLocation.getLength()) > offset) || (m.structureLocation.getOffset() <= offset && (m.structureLocation.getOffset() + m.structureLocation.getLength()) > offset)) {
-                return m;
+                ms.add(m);
             }
         }
-        return null;
+        return ms.toArray(new StructureMatch[0]);
     }
 
 }

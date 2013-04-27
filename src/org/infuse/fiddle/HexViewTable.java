@@ -40,8 +40,12 @@ public class HexViewTable extends JTable {
         return _renderer;
     }
     
-    public void setSelection(int offset, int length) {
-        _renderer.setSelection(offset, length);
+    public void clearHighlights() {
+        _renderer.clearHighlights();
+    }
+    
+    public void addHighlight(int offset, int length) {
+        _renderer.addHighlight(offset, length);
     }
     
 }
