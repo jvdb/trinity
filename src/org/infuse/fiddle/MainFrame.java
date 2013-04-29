@@ -37,6 +37,7 @@ public class MainFrame extends JFrame {
 
     private HexViewTable _hexView;
     private CodeEditorPane _codeView;
+    private SentenceViewTable _sentenceView;
 
     private File _codeFile;
     private File _dataFile;
@@ -52,7 +53,7 @@ public class MainFrame extends JFrame {
     private void initGUI() throws IOException {
         // Main window
         setTitle("Fiddle");
-        setSize(1056, 480);
+        setSize(1056, 640);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -99,6 +100,13 @@ public class MainFrame extends JFrame {
             }
         });
         
+        // Sentence view
+        _sentenceView = new SentenceViewTable();
+        JScrollPane osp = new JScrollPane(_sentenceView);
+        osp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        osp.setPreferredSize(new Dimension(1056, 160));
+        add(osp, BorderLayout.SOUTH);
+        
         // Menu
         JMenuBar mb = new JMenuBar();
         JMenu m = new JMenu("File");
@@ -136,6 +144,8 @@ public class MainFrame extends JFrame {
                     setTitle(_codeFile.getName() + " on " + _dataFile.getName() + " results in: " + (_current.isValidated ? "Validated!" : "Not validated!"));
                     ((HexViewTableModel) _hexView.getModel()).setFile(_dataFile);
                     _hexView.revalidate();
+                    ((SentenceViewTableModel)_sentenceView.getModel()).setSentence(_current);
+                    _sentenceView.revalidate();
                 }
             }
         } catch (IOException e) {
