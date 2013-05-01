@@ -18,28 +18,28 @@ public class SentenceViewTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return 1;
-    }
-
-    @Override
-    public int getColumnCount() {
         if (_sentence == null) {
             return 0;
         } else {
             return _sentence.matches.size();
         }
     }
+
+    @Override
+    public int getColumnCount() {
+        return 1;
+    }
     
     @Override
     public String getColumnName(int column) {
-        return "#" + Integer.toString(column);
+        return "StructureName";
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex > 0) { return null; }
-        if (columnIndex >= _sentence.matches.size()) { return null; }
-        return _sentence.matches.get(columnIndex).name;
+        if (columnIndex > 0) { return null; }
+        if (rowIndex >= _sentence.matches.size()) { return null; }
+        return _sentence.matches.get(rowIndex).name;
     }
     
     @Override
