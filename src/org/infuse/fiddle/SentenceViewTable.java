@@ -1,16 +1,14 @@
 package org.infuse.fiddle;
 
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTree;
 
 @SuppressWarnings("serial")
-public class SentenceViewTable extends JTable {
+public class SentenceViewTable extends JTree {
     
     public SentenceViewTable() {
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setModel(new SentenceViewTableModel());
-        setFillsViewportHeight(true);
-        setCellSelectionEnabled(true);
+        setDragEnabled(false);
+        setEditable(false);
+        setRootVisible(false);
     }
 
 }

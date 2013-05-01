@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -38,7 +40,7 @@ public class MainFrame extends JFrame {
 
     private HexViewTable _hexView;
     private CodeEditorPane _codeView;
-    private SentenceViewTable _sentenceView;
+    private JTree _sentenceView;
 
     private File _codeFile;
     private File _dataFile;
@@ -64,7 +66,6 @@ public class MainFrame extends JFrame {
         JScrollPane tsp = new JScrollPane(_hexView);
         tsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         tsp.setPreferredSize(new Dimension(_hexView.getPreferredSize().width + 24, _hexView.getPreferredSize().height));
-        //add(tsp, BorderLayout.WEST);
         ListSelectionListener sl = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -89,7 +90,6 @@ public class MainFrame extends JFrame {
         _codeView.setVerticalLineAtPos(80);
         JScrollPane esp = new JScrollPane(_codeView);
         esp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        //add(esp, BorderLayout.CENTER);
         _codeView.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
@@ -104,10 +104,10 @@ public class MainFrame extends JFrame {
         JSplitPane splitContent = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tsp, esp);
         
         // Sentence view
-        _sentenceView = new SentenceViewTable();
+        _sentenceView = new JTree();
+        _sentenceView.setModel(new SentenceViewTreeModel("None", new ArrayList<StructureMatch>()));
         JScrollPane osp = new JScrollPane(_sentenceView);
         osp.setPreferredSize(new Dimension(160, 1000));
-        //add(osp, BorderLayout.SOUTH);
         
         JSplitPane splitNav = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, osp, splitContent);
         add(splitNav);
@@ -150,7 +150,7 @@ public class MainFrame extends JFrame {
                     setTitle(_codeFile.getName() + " on " + _dataFile.getName() + " results in: " + (_current.isValidated ? "Validated!" : "Not validated!"));
                     ((HexViewTableModel) _hexView.getModel()).setFile(_dataFile);
                     _hexView.revalidate();
-                    ((SentenceViewTableModel)_sentenceView.getModel()).setSentence(_current);
+                    _sentenceView.setModel(new SentenceViewTreeModel(_dataFile.getName(), _current.matches));
                     _sentenceView.revalidate();
                 }
             }
