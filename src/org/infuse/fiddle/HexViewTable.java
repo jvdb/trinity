@@ -14,6 +14,7 @@ public class HexViewTable extends JTable {
     public final HighlightTableCellRenderer _renderer;
     
     public HexViewTable() throws IOException {
+        getTableHeader().setReorderingAllowed(false);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setModel(new HexViewTableModel(null));
         setFont(new Font("Courier New", getFont().getStyle(), getFont().getSize()));
