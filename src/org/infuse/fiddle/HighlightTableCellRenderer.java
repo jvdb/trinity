@@ -11,11 +11,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 public class HighlightTableCellRenderer extends DefaultTableCellRenderer {
     
+    public static final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
+    
     public HighlightTableCellRenderer() {
         _selections = new ArrayList<Selection>();
     }
-    
-    public static final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
     
     private class Selection {
         
@@ -38,9 +38,9 @@ public class HighlightTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (isSelected) {
+        c.setForeground(Color.BLACK);
+        if (isSelected && hasFocus) {
             c.setBackground(Color.DARK_GRAY);
-            return c;
         }
         if (column < 1 || column > HexViewTableModel.WIDTH) {
             c.setBackground(Color.WHITE);

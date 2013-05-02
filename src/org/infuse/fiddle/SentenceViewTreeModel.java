@@ -1,5 +1,6 @@
 package org.infuse.fiddle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.event.TreeModelListener;
@@ -11,11 +12,14 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 public class SentenceViewTreeModel implements TreeModel {
 
     private String _fileName;
-    private List<StructureMatch> _matches;
+    private List<Node> _matches;
     
     public SentenceViewTreeModel(String fileName, List<StructureMatch> matches) {
         _fileName = fileName;
-        _matches = matches;
+        _matches = new ArrayList<Node>();
+        for (StructureMatch m : matches) {
+            _matches.add(new Node(m));
+        }
     }
 
     @Override
@@ -27,7 +31,7 @@ public class SentenceViewTreeModel implements TreeModel {
     public Object getChild(Object parent, int index) {
         if (parent != _fileName) { return null; }
         if (index < 0 || index >= _matches.size()) { return null; }
-        return new Node(_matches.get(index));
+        return _matches.get(index);
     }
 
     @Override
@@ -52,12 +56,7 @@ public class SentenceViewTreeModel implements TreeModel {
     @Override
     public int getIndexOfChild(Object parent, Object child) {
         if (parent != _fileName) { return -1; }
-        for (StructureMatch m : _matches) {
-            if (((Node)child).match == m) {
-                return _matches.indexOf(m);
-            }
-        }
-        return -1;
+        return _matches.indexOf(child);
     }
 
     @Override
@@ -66,6 +65,15 @@ public class SentenceViewTreeModel implements TreeModel {
 
     @Override
     public void removeTreeModelListener(TreeModelListener l) {
+    }
+    
+    public TreePath getPathToRoot(StructureMatch match) {
+        for (Node n : _matches) {
+            if (n.match == match) {
+                return new TreePath(new Object[] { _fileName, n });
+            }
+        }
+        return null;
     }
 
 }

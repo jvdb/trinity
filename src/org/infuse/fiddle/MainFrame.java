@@ -22,14 +22,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.tree.TreePath;
 
 import org.derric_lang.validator.interpreter.StructureMatch;
 
@@ -40,7 +42,7 @@ public class MainFrame extends JFrame {
 
     private HexViewTable _hexView;
     private CodeEditorPane _codeView;
-    private JTree _sentenceView;
+    private SentenceViewTree _sentenceView;
 
     private File _codeFile;
     private File _dataFile;
@@ -56,7 +58,7 @@ public class MainFrame extends JFrame {
     private void initGUI() throws IOException {
         // Main window
         setTitle("Fiddle");
-        setSize(800, 1000);
+        setSize(800, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -73,8 +75,9 @@ public class MainFrame extends JFrame {
                     if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
                         int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
                         StructureMatch match = _current.getDataMatch(offset);
-                        setHighlightsFromHexView(match);
+                        setHighlightFromHexView(match);
                     } else {
+                        clearSelections();
                         clearHighlights();
                     }
                     _hexView.repaint();
@@ -95,7 +98,7 @@ public class MainFrame extends JFrame {
             public void caretUpdate(CaretEvent e) {
                 if (_current != null) {
                     StructureMatch[] matches = _current.getCodeMatches(e.getDot());
-                    setHighlightsFromCodeView(matches);
+                    setHighlightFromCodeView(matches);
                     _hexView.repaint();
                 }
             }
@@ -104,10 +107,21 @@ public class MainFrame extends JFrame {
         JSplitPane splitContent = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tsp, esp);
         
         // Sentence view
-        _sentenceView = new JTree();
+        _sentenceView = new SentenceViewTree();
         _sentenceView.setModel(new SentenceViewTreeModel("None", new ArrayList<StructureMatch>()));
         JScrollPane osp = new JScrollPane(_sentenceView);
-        osp.setPreferredSize(new Dimension(160, 1000));
+        osp.setPreferredSize(new Dimension(160, 700));
+        _sentenceView.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                if (_current != null) {
+                    setHighlightFromSentenceView(((Node)e.getPath().getLastPathComponent()).match);
+                } else {
+                    clearHighlights();
+                }
+                _hexView.repaint();
+            }
+        });
         
         JSplitPane splitNav = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, osp, splitContent);
         add(splitNav);
@@ -178,17 +192,28 @@ public class MainFrame extends JFrame {
         return syntax;
     }
     
-    private void setHighlightsFromHexView(StructureMatch match) {
+    private void setHighlightFromHexView(StructureMatch match) {
         if (match != null) {
             clearHighlights();
+            clearSelections();
             setHighlight(match);
+            _sentenceView.addToSelection(new StructureMatch[] { match });
         }
     }
     
-    private void setHighlightsFromCodeView(StructureMatch[] matches) {
+    private void setHighlightFromCodeView(StructureMatch[] matches) {
         clearHighlights();
+        clearSelections();
         for (StructureMatch m : matches) {
             setHighlight(m);
+        }
+        _sentenceView.addToSelection(matches);
+    }
+    
+    private void setHighlightFromSentenceView(StructureMatch match) {
+        if (match != null) {
+            clearHighlights();
+            setHighlight(match);
         }
     }
     
@@ -207,6 +232,10 @@ public class MainFrame extends JFrame {
     private void clearHighlights() {
         _hexView.clearHighlights();
         _codeView.getHighlighter().removeAllHighlights();
+    }
+    
+    private void clearSelections() {
+        _sentenceView.setSelectionPaths(new TreePath[0]);
     }
     
 }
