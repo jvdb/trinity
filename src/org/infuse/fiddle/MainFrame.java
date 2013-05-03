@@ -98,11 +98,7 @@ public class MainFrame extends JFrame {
         _codeView.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                if (_current != null) {
-                    StructureMatch[] matches = _current.getCodeMatches(e.getDot());
-                    setHighlightFromCodeView(matches);
-                    _hexView.repaint();
-                }
+                handleCodeSelection();
             }
         });
         
@@ -206,18 +202,26 @@ public class MainFrame extends JFrame {
         _hexView.repaint();
     }
     
+    private void handleCodeSelection() {
+        if (_current != null) {
+            StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
+            setHighlightFromCodeView(matches);
+            _hexView.repaint();
+        }
+    }
+    
     private void setHighlightFromHexView(StructureMatch match) {
         if (match != null) {
-            clearHighlights();
             clearSelections();
+            clearHighlights();
             setHighlight(match);
             _sentenceView.addToSelection(new StructureMatch[] { match });
         }
     }
     
     private void setHighlightFromCodeView(StructureMatch[] matches) {
-        clearHighlights();
         clearSelections();
+        clearHighlights();
         for (StructureMatch m : matches) {
             setHighlight(m);
         }
