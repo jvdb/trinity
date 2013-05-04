@@ -33,7 +33,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.tree.TreePath;
 
 import org.derric_lang.validator.interpreter.StructureMatch;
 
@@ -118,6 +117,7 @@ public class MainFrame extends JFrame {
                     clearHighlights();
                 }
                 _hexView.repaint();
+                _sentenceView.repaint();
             }
         });
         
@@ -196,10 +196,10 @@ public class MainFrame extends JFrame {
             StructureMatch match = _current.getDataMatch(offset);
             setHighlightFromHexView(match);
         } else {
-            clearSelections();
             clearHighlights();
         }
         _hexView.repaint();
+        _sentenceView.repaint();
     }
     
     private void handleCodeSelection() {
@@ -207,25 +207,22 @@ public class MainFrame extends JFrame {
             StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
             setHighlightFromCodeView(matches);
             _hexView.repaint();
+            _sentenceView.repaint();
         }
     }
     
     private void setHighlightFromHexView(StructureMatch match) {
         if (match != null) {
-            clearSelections();
             clearHighlights();
             setHighlight(match);
-            _sentenceView.addToSelection(new StructureMatch[] { match });
         }
     }
     
     private void setHighlightFromCodeView(StructureMatch[] matches) {
-        clearSelections();
         clearHighlights();
         for (StructureMatch m : matches) {
             setHighlight(m);
         }
-        _sentenceView.addToSelection(matches);
     }
     
     private void setHighlightFromSentenceView(StructureMatch match) {
@@ -241,6 +238,7 @@ public class MainFrame extends JFrame {
                 _hexView.addHighlight(match.inputLocation.getOffset(), match.inputLocation.getLength());
                 _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), _hl);
                 _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), _hl);
+                _sentenceView.addHighlight(match);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -250,10 +248,7 @@ public class MainFrame extends JFrame {
     private void clearHighlights() {
         _hexView.clearHighlights();
         _codeView.getHighlighter().removeAllHighlights();
-    }
-    
-    private void clearSelections() {
-        _sentenceView.setSelectionPaths(new TreePath[0]);
+        _sentenceView.clearHighlights();
     }
     
 }

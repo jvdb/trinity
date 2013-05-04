@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 public class HighlightTableCellRenderer extends DefaultTableCellRenderer {
     
-    public static final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
+    private final List<Selection> _selections;
     
     public HighlightTableCellRenderer() {
         _selections = new ArrayList<Selection>();
@@ -32,8 +32,6 @@ public class HighlightTableCellRenderer extends DefaultTableCellRenderer {
         }
         
     }
-    
-    private final List<Selection> _selections;
     
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
