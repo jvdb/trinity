@@ -35,9 +35,6 @@ public class HighlightTreeCellRenderer extends DefaultTreeCellRenderer {
         } else {
             c.setBackground(Color.WHITE);
         }
-        if (isSelected && hasFocus) {
-            c.setBackground(Color.DARK_GRAY);
-        }
         return c;
     }
 }
