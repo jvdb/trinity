@@ -12,13 +12,13 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 public class SentenceViewTreeModel implements TreeModel {
 
     private String _fileName;
-    private List<Node> _matches;
+    private List<StructureMatch> _matches;
     
     public SentenceViewTreeModel(String fileName, List<StructureMatch> matches) {
         _fileName = fileName;
-        _matches = new ArrayList<Node>();
+        _matches = new ArrayList<StructureMatch>();
         for (StructureMatch m : matches) {
-            _matches.add(new Node(m));
+            _matches.add(m);
         }
     }
 
@@ -68,8 +68,8 @@ public class SentenceViewTreeModel implements TreeModel {
     }
     
     public TreePath getPathToRoot(StructureMatch match) {
-        for (Node n : _matches) {
-            if (n.match == match) {
+        for (StructureMatch n : _matches) {
+            if (n == match) {
                 return new TreePath(new Object[] { _fileName, n });
             }
         }

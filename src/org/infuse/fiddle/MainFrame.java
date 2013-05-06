@@ -209,7 +209,7 @@ public class MainFrame extends JFrame {
     }
     
     private void handleSentenceSelection() {
-        StructureMatch match = ((Node)_sentenceView.getSelectionPath().getLastPathComponent()).match;
+        StructureMatch match = ((StructureMatch)_sentenceView.getSelectionPath().getLastPathComponent());
         if (_current != null && match != null) {
             clearHighlights();
             setHighlight(match);
