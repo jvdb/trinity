@@ -13,16 +13,16 @@ public class SentenceViewTree extends JTree {
         setDragEnabled(false);
         setEditable(false);
         setRootVisible(false);
-        setCellRenderer(new HighlightTreeCellRenderer());
+        setCellRenderer(new SentenceViewTreeCellRenderer());
     }
     
     public void addHighlight(StructureMatch match) {
         SentenceViewTreeModel model = (SentenceViewTreeModel)getModel();
-        ((HighlightTreeCellRenderer)getCellRenderer()).addSelection(getRowForPath(model.getPathToRoot(match)));
+        ((SentenceViewTreeCellRenderer)getCellRenderer()).addSelection(getRowForPath(model.getPathToRoot(match)));
     }
     
     public void clearHighlights() {
-        ((HighlightTreeCellRenderer)getCellRenderer()).clearSelection();
+        ((SentenceViewTreeCellRenderer)getCellRenderer()).clearSelection();
     }
 
 }

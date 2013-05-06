@@ -9,11 +9,11 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 @SuppressWarnings("serial")
-public class HighlightTreeCellRenderer extends DefaultTreeCellRenderer {
+public class SentenceViewTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private final HashSet<Integer> _selections;
     
-    public HighlightTreeCellRenderer() {
+    public SentenceViewTreeCellRenderer() {
         _selections = new HashSet<Integer>();
     }
     

@@ -9,11 +9,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-public class HighlightTableCellRenderer extends DefaultTableCellRenderer {
+public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     
     private final List<Selection> _selections;
     
-    public HighlightTableCellRenderer() {
+    public HexViewTableCellRenderer() {
         _selections = new ArrayList<Selection>();
     }
     

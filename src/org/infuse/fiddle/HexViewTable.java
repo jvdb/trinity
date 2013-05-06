@@ -11,7 +11,7 @@ import javax.swing.table.TableColumnModel;
 @SuppressWarnings("serial")
 public class HexViewTable extends JTable {
     
-    public final HighlightTableCellRenderer _renderer;
+    public final HexViewTableCellRenderer _renderer;
     
     public HexViewTable() throws IOException {
         getTableHeader().setReorderingAllowed(false);
@@ -27,7 +27,7 @@ public class HexViewTable extends JTable {
         setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         setFillsViewportHeight(true);
         setCellSelectionEnabled(true);
-        _renderer = new HighlightTableCellRenderer();
+        _renderer = new HexViewTableCellRenderer();
     }
     
     private void fixWidth(TableColumnModel cm, int index, int width) {
