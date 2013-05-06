@@ -3,6 +3,7 @@ package org.infuse.fiddle;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -13,17 +14,17 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.CodeEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -42,7 +43,7 @@ public class MainFrame extends JFrame {
     private final Interpreter _interpreter;
 
     private HexViewTable _hexView;
-    private CodeEditorPane _codeView;
+    private JTextPane _codeView;
     private SentenceViewTree _sentenceView;
 
     private File _codeFile;
@@ -89,10 +90,11 @@ public class MainFrame extends JFrame {
         });
         
         // Code view
-        _codeView = new CodeEditorPane();
-        _codeView.setKeywordColor(getDerricColors());
-        _codeView.setVerticalLineAtPos(80);
-        JScrollPane esp = new JScrollPane(_codeView);
+        _codeView = new JTextPane();
+        _codeView.setFont(new Font("Courier New", _codeView.getFont().getStyle(), _codeView.getFont().getSize()));
+        JPanel noWrapPanel = new JPanel(new BorderLayout());
+        noWrapPanel.add(_codeView);
+        JScrollPane esp = new JScrollPane(noWrapPanel);
         esp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         _codeView.addCaretListener(new CaretListener() {
             @Override
@@ -183,11 +185,6 @@ public class MainFrame extends JFrame {
             }
         }
         return null;
-    }
-    
-    private HashMap<String, Color> getDerricColors() {
-        HashMap<String, Color> syntax = new HashMap<String, Color>();
-        return syntax;
     }
     
     private void handleHexSelection() {
