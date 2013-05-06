@@ -113,13 +113,7 @@ public class MainFrame extends JFrame {
         _sentenceView.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                if (_current != null) {
-                    setHighlightFromSentenceView(((Node)e.getPath().getLastPathComponent()).match);
-                } else {
-                    clearHighlights();
-                }
-                _hexView.repaint();
-                _sentenceView.repaint();
+                handleSentenceSelection();
             }
         });
         
@@ -191,7 +185,10 @@ public class MainFrame extends JFrame {
         if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
             int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
             StructureMatch match = _current.getDataMatch(offset);
-            setHighlightFromHexView(match);
+            if (match != null) {
+                clearHighlights();
+                setHighlight(match);
+            }
         } else {
             clearHighlights();
         }
@@ -202,31 +199,25 @@ public class MainFrame extends JFrame {
     private void handleCodeSelection() {
         if (_current != null) {
             StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
-            setHighlightFromCodeView(matches);
+            clearHighlights();
+            for (StructureMatch m : matches) {
+                setHighlight(m);
+            }
             _hexView.repaint();
             _sentenceView.repaint();
         }
     }
     
-    private void setHighlightFromHexView(StructureMatch match) {
-        if (match != null) {
+    private void handleSentenceSelection() {
+        StructureMatch match = ((Node)_sentenceView.getSelectionPath().getLastPathComponent()).match;
+        if (_current != null && match != null) {
             clearHighlights();
             setHighlight(match);
-        }
-    }
-    
-    private void setHighlightFromCodeView(StructureMatch[] matches) {
-        clearHighlights();
-        for (StructureMatch m : matches) {
-            setHighlight(m);
-        }
-    }
-    
-    private void setHighlightFromSentenceView(StructureMatch match) {
-        if (match != null) {
+        } else {
             clearHighlights();
-            setHighlight(match);
         }
+        _hexView.repaint();
+        _sentenceView.repaint();
     }
     
     private void setHighlight(StructureMatch match) {
