@@ -132,6 +132,15 @@ public class MainFrame extends JFrame {
             }
         });
         m.add(mi);
+        m.addSeparator();
+        JMenuItem mx = new JMenuItem("Exit", KeyEvent.VK_X);
+        mx.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        m.add(mx);
         mb.add(m);
         setJMenuBar(mb);
         
@@ -152,6 +161,7 @@ public class MainFrame extends JFrame {
                     sb.append("\n");
                 }
                 _codeView.setText(sb.toString());
+                _codeView.setCaretPosition(0);
                 _dataFile = getFile(null);
                 if (_dataFile != null) {
                     _current = _interpreter.run(_codeFile.getPath(), _dataFile.getPath());
