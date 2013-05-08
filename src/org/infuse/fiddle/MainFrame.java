@@ -34,6 +34,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.tree.TreePath;
 
 import org.derric_lang.validator.interpreter.StructureMatch;
 
@@ -211,8 +212,13 @@ public class MainFrame extends JFrame {
     
     private void handleSentenceSelection() {
         if (_current != null) {
-            StructureMatch match = ((StructureMatch)_sentenceView.getSelectionPath().getLastPathComponent());
-            setHighlights(match);
+            TreePath selection = _sentenceView.getSelectionPath();
+            if (selection.getPathCount() == 2) {
+                StructureMatch match = ((StructureMatch)selection.getLastPathComponent());
+                setHighlights(match);
+            } else {
+                setHighlights((StructureMatch)null);
+            }
         }
     }
     
