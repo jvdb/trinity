@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.tree.TreePath;
 
+import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.StructureMatch;
 
 @SuppressWarnings("serial")
@@ -199,14 +200,18 @@ public class MainFrame extends JFrame {
                 int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
                 match = _current.getDataMatch(offset);
             }
-            setHighlights(match);
+            setHighlights(new Selection(match));
         }
     }
     
     private void handleCodeSelection() {
         if (_current != null) {
             StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
-            setHighlights(matches);
+            Selection[] selections = new Selection[matches.length];
+            for (int i = 0; i < matches.length; i++) {
+                selections[i] = new Selection(matches[i]);
+            }
+            setHighlights(selections);
         }
     }
     
@@ -214,23 +219,30 @@ public class MainFrame extends JFrame {
         if (_current != null) {
             TreePath selection = _sentenceView.getSelectionPath();
             if (selection.getPathCount() == 2) {
-                StructureMatch match = ((StructureMatch)selection.getLastPathComponent());
-                setHighlights(match);
+                StructureMatch structure = ((StructureMatch)selection.getLastPathComponent());
+                setHighlights(new Selection(structure));
+            } else if (selection.getPathCount() == 3) {
+                StructureMatch structure = (StructureMatch)selection.getPathComponent(1);
+                FieldMatch field = (FieldMatch)selection.getPathComponent(2);
+                setHighlights(new Selection(structure, field));
             } else {
-                setHighlights((StructureMatch)null);
+                setHighlights(new Selection(null));
             }
         }
     }
     
-    private void setHighlights(StructureMatch... matches) {
+    private void setHighlights(Selection... selections) {
         clearHighlights();
-        for (StructureMatch match : matches) {
-            if (match != null) {
+        for (Selection selection : selections) {
+            if (selection.structure != null) {
                 try {
-                    _hexView.addHighlight(match.inputLocation.getOffset(), match.inputLocation.getLength());
-                    _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), _hl);
-                    _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), _hl);
-                    _sentenceView.addHighlight(match);
+                    _hexView.addHighlight(selection.structure.inputLocation.getOffset(), selection.structure.inputLocation.getLength());
+                    _codeView.getHighlighter().addHighlight(selection.structure.sequenceLocation.getOffset(), selection.structure.sequenceLocation.getOffset() + selection.structure.sequenceLocation.getLength(), _hl);
+                    _codeView.getHighlighter().addHighlight(selection.structure.structureLocation.getOffset(), selection.structure.structureLocation.getOffset() + selection.structure.structureLocation.getLength(), _hl);
+                    _sentenceView.addHighlight(selection.structure);
+                    if (selection.field != null) {
+                        _sentenceView.addHighlight(selection.field);
+                    }
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }

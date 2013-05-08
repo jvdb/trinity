@@ -84,10 +84,15 @@ public class SentenceViewTreeModel implements TreeModel {
     public void removeTreeModelListener(TreeModelListener l) {
     }
     
-    public TreePath getPathToRoot(StructureMatch match) {
+    public TreePath getPathToRoot(Object match) {
         for (StructureMatch n : _matches) {
             if (n == match) {
                 return new TreePath(new Object[] { _fileName, n });
+            }
+            for (FieldMatch f : n.fields) {
+                if (f == match) {
+                    return new TreePath(new Object[] { _fileName, n, f });
+                }
             }
         }
         return null;

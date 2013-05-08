@@ -11,18 +11,25 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 @SuppressWarnings("serial")
 public class SentenceViewTreeCellRenderer extends DefaultTreeCellRenderer {
     
-    private final HashSet<Integer> _selections;
+    private final HashSet<Integer> _structures;
+    private final HashSet<Integer> _fields;
     
     public SentenceViewTreeCellRenderer() {
-        _selections = new HashSet<Integer>();
+        _structures = new HashSet<Integer>();
+        _fields = new HashSet<Integer>();
     }
     
-    public void addSelection(int row) {
-        _selections.add(row);
+    public void addStructureSelection(int row) {
+        _structures.add(row);
+    }
+    
+    public void addFieldSelection(int row) {
+        _fields.add(row);
     }
     
     public void clearSelection() {
-        _selections.clear();
+        _structures.clear();
+        _fields.clear();
     }
     
     @Override
@@ -30,8 +37,10 @@ public class SentenceViewTreeCellRenderer extends DefaultTreeCellRenderer {
         JComponent c = (JComponent)super.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus);
         c.setOpaque(true);
         c.setForeground(Color.BLACK);
-        if (_selections.contains(row)) {
+        if (_structures.contains(row)) {
             c.setBackground(Color.LIGHT_GRAY);
+        } else if (_fields.contains(row)) {
+            c.setBackground(Color.GRAY);
         } else {
             c.setBackground(Color.WHITE);
         }
