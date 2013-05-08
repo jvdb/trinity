@@ -11,10 +11,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     
-    private final List<Selection> _selections;
+    private final List<Selection> _structures;
+    private final List<Selection> _fields;
     
     public HexViewTableCellRenderer() {
-        _selections = new ArrayList<Selection>();
+        _structures = new ArrayList<Selection>();
+        _fields = new ArrayList<Selection>();
     }
     
     private class Selection {
@@ -43,21 +45,30 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
         }
         int offset = (row * HexViewTableModel.WIDTH) + (column - 1);
         c.setBackground(Color.WHITE);
-        for (Selection s : _selections) {
+        for (Selection s : _structures) {
             if (s.in(offset)) {
                 c.setBackground(Color.LIGHT_GRAY);
-                return c;
+            }
+        }
+        for (Selection s : _fields) {
+            if (s.in(offset)) {
+                c.setBackground(Color.GRAY);
             }
         }
         return c;
     }
     
-    public void addHighlight(int offset, int length) {
-        _selections.add(new Selection(offset, length));
+    public void addStructureHighlight(int offset, int length) {
+        _structures.add(new Selection(offset, length));
+    }
+    
+    public void addFieldHighlight(int offset, int length) {
+        _fields.add(new Selection(offset, length));
     }
     
     public void clearHighlights() {
-        _selections.clear();
+        _structures.clear();
+        _fields.clear();
     }
     
 }

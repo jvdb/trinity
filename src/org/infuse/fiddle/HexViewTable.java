@@ -8,6 +8,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+import org.derric_lang.validator.interpreter.FieldMatch;
+import org.derric_lang.validator.interpreter.StructureMatch;
+
 @SuppressWarnings("serial")
 public class HexViewTable extends JTable {
     
@@ -45,8 +48,12 @@ public class HexViewTable extends JTable {
         _renderer.clearHighlights();
     }
     
-    public void addHighlight(int offset, int length) {
-        _renderer.addHighlight(offset, length);
+    public void addHighlight(StructureMatch structure) {
+        _renderer.addStructureHighlight(structure.inputLocation.getOffset(), structure.inputLocation.getLength());
+    }
+    
+    public void addHighlight(FieldMatch field) {
+        _renderer.addFieldHighlight(field.inputLocation.getOffset(), field.inputLocation.getLength());
     }
     
 }

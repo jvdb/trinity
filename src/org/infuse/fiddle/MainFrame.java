@@ -236,11 +236,12 @@ public class MainFrame extends JFrame {
         for (Selection selection : selections) {
             if (selection.structure != null) {
                 try {
-                    _hexView.addHighlight(selection.structure.inputLocation.getOffset(), selection.structure.inputLocation.getLength());
+                    _hexView.addHighlight(selection.structure);
                     _codeView.getHighlighter().addHighlight(selection.structure.sequenceLocation.getOffset(), selection.structure.sequenceLocation.getOffset() + selection.structure.sequenceLocation.getLength(), _hl);
                     _codeView.getHighlighter().addHighlight(selection.structure.structureLocation.getOffset(), selection.structure.structureLocation.getOffset() + selection.structure.structureLocation.getLength(), _hl);
                     _sentenceView.addHighlight(selection.structure);
                     if (selection.field != null) {
+                        _hexView.addHighlight(selection.field);
                         _sentenceView.addHighlight(selection.field);
                     }
                 } catch (Exception ex) {
