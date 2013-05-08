@@ -192,55 +192,46 @@ public class MainFrame extends JFrame {
     }
     
     private void handleHexSelection() {
-        if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
-            int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
-            StructureMatch match = _current.getDataMatch(offset);
-            if (match != null) {
-                clearHighlights();
-                setHighlight(match);
+        if (_current != null) {
+            StructureMatch match = null;
+            if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
+                int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
+                match = _current.getDataMatch(offset);
             }
-        } else {
-            clearHighlights();
+            setHighlights(match);
         }
-        _hexView.repaint();
-        _sentenceView.repaint();
     }
     
     private void handleCodeSelection() {
         if (_current != null) {
             StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
-            clearHighlights();
-            for (StructureMatch m : matches) {
-                setHighlight(m);
-            }
-            _hexView.repaint();
-            _sentenceView.repaint();
+            setHighlights(matches);
         }
     }
     
     private void handleSentenceSelection() {
-        StructureMatch match = ((StructureMatch)_sentenceView.getSelectionPath().getLastPathComponent());
-        if (_current != null && match != null) {
-            clearHighlights();
-            setHighlight(match);
-        } else {
-            clearHighlights();
+        if (_current != null) {
+            StructureMatch match = ((StructureMatch)_sentenceView.getSelectionPath().getLastPathComponent());
+            setHighlights(match);
+        }
+    }
+    
+    private void setHighlights(StructureMatch... matches) {
+        clearHighlights();
+        for (StructureMatch match : matches) {
+            if (match != null) {
+                try {
+                    _hexView.addHighlight(match.inputLocation.getOffset(), match.inputLocation.getLength());
+                    _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), _hl);
+                    _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), _hl);
+                    _sentenceView.addHighlight(match);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
         _hexView.repaint();
         _sentenceView.repaint();
-    }
-    
-    private void setHighlight(StructureMatch match) {
-        if (match != null) {
-            try {
-                _hexView.addHighlight(match.inputLocation.getOffset(), match.inputLocation.getLength());
-                _codeView.getHighlighter().addHighlight(match.sequenceLocation.getOffset(), match.sequenceLocation.getOffset() + match.sequenceLocation.getLength(), _hl);
-                _codeView.getHighlighter().addHighlight(match.structureLocation.getOffset(), match.structureLocation.getOffset() + match.structureLocation.getLength(), _hl);
-                _sentenceView.addHighlight(match);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
     }
     
     private void clearHighlights() {
