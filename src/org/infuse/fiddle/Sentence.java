@@ -3,6 +3,7 @@ package org.infuse.fiddle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.StructureMatch;
 
 public class Sentence {
@@ -15,23 +16,39 @@ public class Sentence {
         this.matches = matches;
     }
     
-    public StructureMatch getDataMatch(int offset) {
-        for (StructureMatch m : matches) {
-            if (m.inputLocation.getOffset() <= offset && (m.inputLocation.getOffset() + m.inputLocation.getLength()) > offset) {
-                return m;
+    public Selection getDataMatch(int offset) {
+        for (StructureMatch s : matches) {
+            if (s.inputLocation.getOffset() <= offset && (s.inputLocation.getOffset() + s.inputLocation.getLength()) > offset) {
+                for (FieldMatch f : s.fields) {
+                    if (f.inputLocation.getOffset() <= offset && (f.inputLocation.getOffset() + f.inputLocation.getLength()) > offset) {
+                        return new Selection(s, f);
+                    }
+                }
+                return new Selection(s);
             }
         }
         return null;
     }
     
-    public StructureMatch[] getCodeMatches(int offset) {
-        ArrayList<StructureMatch> ms = new ArrayList<StructureMatch>();
-        for (StructureMatch m : matches) {
-            if ((m.sequenceLocation.getOffset() <= offset && (m.sequenceLocation.getOffset() + m.sequenceLocation.getLength()) > offset) || (m.structureLocation.getOffset() <= offset && (m.structureLocation.getOffset() + m.structureLocation.getLength()) > offset)) {
-                ms.add(m);
+    public Selection[] getCodeMatches(int offset) {
+        ArrayList<Selection> sl = new ArrayList<Selection>();
+        for (StructureMatch s : matches) {
+            if ((s.sequenceLocation.getOffset() <= offset && (s.sequenceLocation.getOffset() + s.sequenceLocation.getLength()) > offset)) {
+                sl.add(new Selection(s));
+                continue;
+            }
+            if ((s.structureLocation.getOffset() <= offset && (s.structureLocation.getOffset() + s.structureLocation.getLength()) > offset)) {
+                sl.add(new Selection(s));
+                continue;
+            }
+            for (FieldMatch f : s.fields) {
+                if (f.sourceLocation.getOffset() <= offset && (f.sourceLocation.getOffset() + f.sourceLocation.getLength()) > offset) {
+                    sl.add(new Selection(s, f));
+                    break;
+                }
             }
         }
-        return ms.toArray(new StructureMatch[0]);
+        return sl.toArray(new Selection[0]);
     }
 
 }

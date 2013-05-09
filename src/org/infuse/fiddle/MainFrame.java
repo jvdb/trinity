@@ -52,7 +52,8 @@ public class MainFrame extends JFrame {
     private File _dataFile;
     private Sentence _current;
     
-    private DefaultHighlighter.DefaultHighlightPainter _hl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+    private DefaultHighlighter.DefaultHighlightPainter _shl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+    private DefaultHighlighter.DefaultHighlightPainter _fhl = new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY);
     
     public MainFrame() throws IOException {
         _interpreter = new Interpreter();
@@ -195,22 +196,18 @@ public class MainFrame extends JFrame {
     
     private void handleHexSelection() {
         if (_current != null) {
-            StructureMatch match = null;
             if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
                 int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
-                match = _current.getDataMatch(offset);
+                setHighlights(_current.getDataMatch(offset));
+            } else {
+                setHighlights(new Selection(null));
             }
-            setHighlights(new Selection(match));
         }
     }
     
     private void handleCodeSelection() {
         if (_current != null) {
-            StructureMatch[] matches = _current.getCodeMatches(_codeView.getCaretPosition());
-            Selection[] selections = new Selection[matches.length];
-            for (int i = 0; i < matches.length; i++) {
-                selections[i] = new Selection(matches[i]);
-            }
+            Selection[] selections = _current.getCodeMatches(_codeView.getCaretPosition());
             setHighlights(selections);
         }
     }
@@ -237,11 +234,12 @@ public class MainFrame extends JFrame {
             if (selection.structure != null) {
                 try {
                     _hexView.addHighlight(selection.structure);
-                    _codeView.getHighlighter().addHighlight(selection.structure.sequenceLocation.getOffset(), selection.structure.sequenceLocation.getOffset() + selection.structure.sequenceLocation.getLength(), _hl);
-                    _codeView.getHighlighter().addHighlight(selection.structure.structureLocation.getOffset(), selection.structure.structureLocation.getOffset() + selection.structure.structureLocation.getLength(), _hl);
+                    _codeView.getHighlighter().addHighlight(selection.structure.sequenceLocation.getOffset(), selection.structure.sequenceLocation.getOffset() + selection.structure.sequenceLocation.getLength(), _shl);
+                    _codeView.getHighlighter().addHighlight(selection.structure.structureLocation.getOffset(), selection.structure.structureLocation.getOffset() + selection.structure.structureLocation.getLength(), _shl);
                     _sentenceView.addHighlight(selection.structure);
                     if (selection.field != null) {
                         _hexView.addHighlight(selection.field);
+                        _codeView.getHighlighter().addHighlight(selection.field.sourceLocation.getOffset(), selection.field.sourceLocation.getOffset() + selection.field.sourceLocation.getLength(), _fhl);
                         _sentenceView.addHighlight(selection.field);
                     }
                 } catch (Exception ex) {
