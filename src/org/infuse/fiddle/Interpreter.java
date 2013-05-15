@@ -3,13 +3,18 @@ package org.infuse.fiddle;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.SourceLocation;
 import org.derric_lang.validator.interpreter.StructureMatch;
 import org.eclipse.imp.pdb.facts.IBool;
 import org.eclipse.imp.pdb.facts.IList;
+import org.eclipse.imp.pdb.facts.IMap;
+import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.ITuple;
@@ -24,7 +29,8 @@ public class Interpreter {
     
     private final String DERRIC_SRC_PATH = "../derric/src";
     private final String MODULE_NAME = "lang::derric::testparse";
-    private final String FUNCTION_NAME = "execute";
+    private final String EXECUTE_FUNCTION_NAME = "execute";
+    private final String COLOR_FUNCTION_NAME = "getSyntaxMap";
     
     private final Evaluator _evaluator;
     private final IValueFactory _values;
@@ -41,7 +47,7 @@ public class Interpreter {
     public Sentence run(String derricPath, String dataPath) {
         ISourceLocation derricLoc = _values.sourceLocation(derricPath);
         ISourceLocation dataLoc = _values.sourceLocation(dataPath);
-        ITuple ret = (ITuple)_evaluator.call(FUNCTION_NAME, new IValue[] { derricLoc, dataLoc });
+        ITuple ret = (ITuple)_evaluator.call(EXECUTE_FUNCTION_NAME, new IValue[] { derricLoc, dataLoc });
         boolean validated = ((IBool)ret.get(0)).getValue();
         List<StructureMatch> matches = buildMatches((IList)ret.get(1));
         return new Sentence(validated, matches);
@@ -65,6 +71,32 @@ public class Interpreter {
                 fields.add(new FieldMatch(fname, fstrLoc, fdatLoc));
             }
             out.add(new StructureMatch(structureName, seqLoc, strLoc, datLoc, fields));
+        }
+        return out;
+    }
+    
+    public class Region {
+        public final int offset;
+        public final int length;
+        public Region(int offset, int length) {
+            this.offset = offset;
+            this.length = length;
+        }
+    }
+    
+    public HashMap<String, Set<Region>> getColorMap(String source) {
+        ITuple ret = (ITuple)_evaluator.call(COLOR_FUNCTION_NAME, _values.string(source));
+        if (!((IBool)ret.get(0)).getValue()) { return null; }
+        HashMap<String, Set<Region>> out = new HashMap<String, Set<Region>>();
+        IMap map = (IMap)ret.get(1);
+        for (IValue k : map) {
+            String key = ((IString)k).getValue();
+            HashSet<Region> value = new HashSet<Region>();
+            ISet regions = (ISet)map.get(k);
+            for (IValue r : regions) {
+                value.add(new Region(((ISourceLocation)r).getOffset(), ((ISourceLocation)r).getLength()));
+            }
+            out.put(key, value);
         }
         return out;
     }

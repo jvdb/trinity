@@ -17,6 +17,8 @@ public class HexViewTable extends JTable {
     public final HexViewTableCellRenderer _renderer;
     
     public HexViewTable() throws IOException {
+        setBackground(MainFrame.BG);
+        setForeground(MainFrame.FG);
         getTableHeader().setReorderingAllowed(false);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setModel(new HexViewTableModel(null));

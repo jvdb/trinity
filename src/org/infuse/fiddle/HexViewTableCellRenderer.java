@@ -1,6 +1,5 @@
 package org.infuse.fiddle;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,21 +37,21 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        c.setForeground(Color.BLACK);
+        c.setForeground(MainFrame.FG);
         if (column < 1 || column > HexViewTableModel.WIDTH) {
-            c.setBackground(Color.WHITE);
+            c.setBackground(MainFrame.BG);
             return c;
         }
         int offset = (row * HexViewTableModel.WIDTH) + (column - 1);
-        c.setBackground(Color.WHITE);
+        c.setBackground(MainFrame.BG);
         for (Selection s : _structures) {
             if (s.in(offset)) {
-                c.setBackground(Color.LIGHT_GRAY);
+                c.setBackground(MainFrame.SH);
             }
         }
         for (Selection s : _fields) {
             if (s.in(offset)) {
-                c.setBackground(Color.GRAY);
+                c.setBackground(MainFrame.FH);
             }
         }
         return c;

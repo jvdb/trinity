@@ -10,6 +10,8 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 public class SentenceViewTree extends JTree {
     
     public SentenceViewTree() {
+        setBackground(MainFrame.BG);
+        setForeground(MainFrame.FG);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         setDragEnabled(false);
         setEditable(false);

@@ -1,6 +1,7 @@
 package org.infuse.fiddle;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +38,11 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
+    
+    public static final Color BG = new Color(0xfdf6e3);
+    public static final Color FG = new Color(0x839496);
+    public static final Color SH = new Color(0x586e75);
+    public static final Color FH = new Color(0x002b36);
     
     private final Interpreter _interpreter;
 
@@ -157,6 +163,7 @@ public class MainFrame extends JFrame {
                 }
                 _codeView.setText(sb.toString());
                 _codeView.setCaretPosition(0);
+                _codeView.colorize(_interpreter.getColorMap(sb.toString()));
                 _dataFile = getFile(null);
                 if (_dataFile != null) {
                     _current = _interpreter.run(_codeFile.getPath(), _dataFile.getPath());

@@ -1,6 +1,5 @@
 package org.infuse.fiddle;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.HashSet;
 
@@ -36,13 +35,13 @@ public class SentenceViewTreeCellRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         JComponent c = (JComponent)super.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus);
         c.setOpaque(true);
-        c.setForeground(Color.BLACK);
+        c.setForeground(MainFrame.FG);
         if (_structures.contains(row)) {
-            c.setBackground(Color.LIGHT_GRAY);
+            c.setBackground(MainFrame.SH);
         } else if (_fields.contains(row)) {
-            c.setBackground(Color.GRAY);
+            c.setBackground(MainFrame.FH);
         } else {
-            c.setBackground(Color.WHITE);
+            c.setBackground(MainFrame.BG);
         }
         return c;
     }
