@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.StructureMatch;
+import org.eclipse.imp.pdb.facts.ISourceLocation;
 
 public class Sentence {
     
@@ -18,9 +19,9 @@ public class Sentence {
     
     public Selection getDataMatch(int offset) {
         for (StructureMatch s : matches) {
-            if (s.inputLocation.getOffset() <= offset && (s.inputLocation.getOffset() + s.inputLocation.getLength()) > offset) {
+            if (isInside(s.inputLocation, offset)) {
                 for (FieldMatch f : s.fields) {
-                    if (f.inputLocation.getOffset() <= offset && (f.inputLocation.getOffset() + f.inputLocation.getLength()) > offset) {
+                    if (isInside(f.inputLocation, offset)) {
                         return new Selection(s, f);
                     }
                 }
@@ -33,22 +34,26 @@ public class Sentence {
     public Selection[] getCodeMatches(int offset) {
         ArrayList<Selection> sl = new ArrayList<Selection>();
         for (StructureMatch s : matches) {
-            if ((s.sequenceLocation.getOffset() <= offset && (s.sequenceLocation.getOffset() + s.sequenceLocation.getLength()) > offset)) {
+            if (isInside(s.sequenceLocation, offset)) {
                 sl.add(new Selection(s));
                 continue;
             }
-            if ((s.structureLocation.getOffset() <= offset && (s.structureLocation.getOffset() + s.structureLocation.getLength()) > offset)) {
+            if (isInside(s.structureLocation, offset)) {
                 sl.add(new Selection(s));
                 continue;
             }
             for (FieldMatch f : s.fields) {
-                if (f.sourceLocation.getOffset() <= offset && (f.sourceLocation.getOffset() + f.sourceLocation.getLength()) > offset) {
+                if (isInside(f.sourceLocation, offset)) {
                     sl.add(new Selection(s, f));
                     break;
                 }
             }
         }
         return sl.toArray(new Selection[0]);
+    }
+    
+    private boolean isInside(ISourceLocation loc, int offset) {
+        return loc.getOffset() <= offset && (loc.getOffset() + loc.getLength()) > offset;
     }
 
 }
