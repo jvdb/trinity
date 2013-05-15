@@ -1,9 +1,7 @@
 package org.infuse.fiddle;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -24,7 +22,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -33,7 +30,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.tree.TreePath;
 
 import org.derric_lang.validator.interpreter.FieldMatch;
@@ -45,15 +41,12 @@ public class MainFrame extends JFrame {
     private final Interpreter _interpreter;
 
     private HexViewTable _hexView;
-    private JTextPane _codeView;
+    private CodeView _codeView;
     private SentenceViewTree _sentenceView;
 
     private File _codeFile;
     private File _dataFile;
     private Sentence _current;
-    
-    private DefaultHighlighter.DefaultHighlightPainter _shl = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-    private DefaultHighlighter.DefaultHighlightPainter _fhl = new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY);
     
     public MainFrame() throws IOException {
         _interpreter = new Interpreter();
@@ -93,8 +86,7 @@ public class MainFrame extends JFrame {
         });
         
         // Code view
-        _codeView = new JTextPane();
-        _codeView.setFont(new Font("Courier New", _codeView.getFont().getStyle(), _codeView.getFont().getSize()));
+        _codeView = new CodeView();
         JPanel noWrapPanel = new JPanel(new BorderLayout());
         noWrapPanel.add(_codeView);
         JScrollPane esp = new JScrollPane(noWrapPanel);
@@ -234,12 +226,11 @@ public class MainFrame extends JFrame {
             if (selection.structure != null) {
                 try {
                     _hexView.addHighlight(selection.structure);
-                    _codeView.getHighlighter().addHighlight(selection.structure.sequenceLocation.getOffset(), selection.structure.sequenceLocation.getOffset() + selection.structure.sequenceLocation.getLength(), _shl);
-                    _codeView.getHighlighter().addHighlight(selection.structure.structureLocation.getOffset(), selection.structure.structureLocation.getOffset() + selection.structure.structureLocation.getLength(), _shl);
+                    _codeView.addHighlight(selection.structure);
                     _sentenceView.addHighlight(selection.structure);
                     if (selection.field != null) {
                         _hexView.addHighlight(selection.field);
-                        _codeView.getHighlighter().addHighlight(selection.field.sourceLocation.getOffset(), selection.field.sourceLocation.getOffset() + selection.field.sourceLocation.getLength(), _fhl);
+                        _codeView.addHighlight(selection.field);
                         _sentenceView.addHighlight(selection.field);
                     }
                 } catch (Exception ex) {
@@ -253,7 +244,7 @@ public class MainFrame extends JFrame {
     
     private void clearHighlights() {
         _hexView.clearHighlights();
-        _codeView.getHighlighter().removeAllHighlights();
+        _codeView.clearHighlights();
         _sentenceView.clearHighlights();
     }
     
