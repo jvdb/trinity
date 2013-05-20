@@ -46,12 +46,12 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
         c.setBackground(MainFrame.BG);
         for (Selection s : _structures) {
             if (s.in(offset)) {
-                c.setBackground(MainFrame.SH);
+                c.setBackground(MainFrame.BG_SEL1);
             }
         }
         for (Selection s : _fields) {
             if (s.in(offset)) {
-                c.setBackground(MainFrame.FH);
+                c.setBackground(MainFrame.BG_SEL2);
             }
         }
         return c;

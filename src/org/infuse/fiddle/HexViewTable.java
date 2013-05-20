@@ -17,12 +17,12 @@ public class HexViewTable extends JTable {
     public final HexViewTableCellRenderer _renderer;
     
     public HexViewTable() throws IOException {
+        setFont(new Font("Monospaced", getFont().getStyle(), getFont().getSize()));
         setBackground(MainFrame.BG);
         setForeground(MainFrame.FG);
         getTableHeader().setReorderingAllowed(false);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setModel(new HexViewTableModel(null));
-        setFont(new Font("Courier New", getFont().getStyle(), getFont().getSize()));
         TableColumnModel cm = getColumnModel();
         fixWidth(cm, 0, 61);
         for (int i = 1; i < 17; i++) {

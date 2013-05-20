@@ -37,9 +37,9 @@ public class SentenceViewTreeCellRenderer extends DefaultTreeCellRenderer {
         c.setOpaque(true);
         c.setForeground(MainFrame.FG);
         if (_structures.contains(row)) {
-            c.setBackground(MainFrame.SH);
+            c.setBackground(MainFrame.BG_SEL1);
         } else if (_fields.contains(row)) {
-            c.setBackground(MainFrame.FH);
+            c.setBackground(MainFrame.BG_SEL2);
         } else {
             c.setBackground(MainFrame.BG);
         }

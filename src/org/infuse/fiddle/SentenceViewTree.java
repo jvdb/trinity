@@ -1,5 +1,7 @@
 package org.infuse.fiddle;
 
+import java.awt.Font;
+
 import javax.swing.JTree;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -10,6 +12,7 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 public class SentenceViewTree extends JTree {
     
     public SentenceViewTree() {
+        setFont(new Font("Monospaced", getFont().getStyle(), getFont().getSize()));
         setBackground(MainFrame.BG);
         setForeground(MainFrame.FG);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

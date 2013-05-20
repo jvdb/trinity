@@ -20,13 +20,13 @@ import org.infuse.fiddle.Interpreter.Region;
 @SuppressWarnings("serial")
 public class CodeView extends JTextPane {
     
-    private DefaultHighlighter.DefaultHighlightPainter _shl = new DefaultHighlighter.DefaultHighlightPainter(MainFrame.SH);
-    private DefaultHighlighter.DefaultHighlightPainter _fhl = new DefaultHighlighter.DefaultHighlightPainter(MainFrame.FH);
+    private DefaultHighlighter.DefaultHighlightPainter _shl = new DefaultHighlighter.DefaultHighlightPainter(MainFrame.BG_SEL1);
+    private DefaultHighlighter.DefaultHighlightPainter _fhl = new DefaultHighlighter.DefaultHighlightPainter(MainFrame.BG_SEL2);
     private final HashMap<String, Style> _colors;
     
     public CodeView() {
         super();
-        setFont(new Font("Courier New", getFont().getStyle(), getFont().getSize()));
+        setFont(new Font("Monospaced", getFont().getStyle(), getFont().getSize()));
         setBackground(MainFrame.BG);
         setForeground(MainFrame.FG);
         
@@ -34,14 +34,14 @@ public class CodeView extends JTextPane {
         StyleContext sc = new StyleContext();
         DefaultStyledDocument doc = new DefaultStyledDocument(sc);
         setDocument(doc);
-        addStyle(sc, "callback", 0xdc322f);
-        addStyle(sc, "comment", 0x93a1a1);
-        addStyle(sc, "keyword", 0x268bd2);
+        addStyle(sc, "callback", MainFrame.RED);
+        addStyle(sc, "comment", MainFrame.COMMENT);
+        addStyle(sc, "keyword", MainFrame.BLUE);
     }
     
-    private void addStyle(StyleContext sc, String name, int rgb) {
+    private void addStyle(StyleContext sc, String name, Color c) {
         Style style = sc.addStyle(name, null);
-        StyleConstants.setForeground(style, new Color(rgb));
+        StyleConstants.setForeground(style, c);
         _colors.put(name, style);
     }
     

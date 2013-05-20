@@ -39,10 +39,20 @@ import org.derric_lang.validator.interpreter.StructureMatch;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     
-    public static final Color BG = new Color(0xfdf6e3);
-    public static final Color FG = new Color(0x839496);
-    public static final Color SH = new Color(0x586e75);
-    public static final Color FH = new Color(0x002b36);
+    public static final Color BG = Color.WHITE;
+    public static final Color FG = Color.DARK_GRAY;
+    public static final Color BG_SEL1 = new Color(0xafafdf);
+    public static final Color BG_SEL2 = new Color(0xdfafaf);
+    public static final Color COMMENT = Color.LIGHT_GRAY;
+
+    public static final Color YELLOW = new Color(0xb58900);
+    public static final Color ORANGE = new Color(0xcb4b16);
+    public static final Color RED = new Color(0xdc322f);
+    public static final Color MAGENTA = new Color(0xd33682);
+    public static final Color VIOLET = new Color(0x6c71c4);
+    public static final Color BLUE = new Color(0x268bd2);
+    public static final Color CYAN = new Color(0x2aa198);
+    public static final Color GREEN = new Color(0x859900);
     
     private final Interpreter _interpreter;
 
