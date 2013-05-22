@@ -35,5 +35,9 @@ public class SentenceViewTree extends JTree {
     public void clearHighlights() {
         ((SentenceViewTreeCellRenderer)getCellRenderer()).clearSelection();
     }
-
+    
+    public void setViewable(Selection selection) {
+        makeVisible(((SentenceViewTreeModel)getModel()).getPathToRoot(selection.field == null ? selection.structure : selection.field));
+    }
+    
 }

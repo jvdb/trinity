@@ -58,4 +58,11 @@ public class HexViewTable extends JTable {
         _renderer.addFieldHighlight(field.inputLocation.getOffset(), field.inputLocation.getLength());
     }
     
+    public void setViewable(Selection selection) {
+        int offset = selection.field == null ? selection.structure.inputLocation.getOffset() : selection.field.inputLocation.getOffset();
+        int row = offset / HexViewTableModel.WIDTH;
+        int col = (offset % HexViewTableModel.WIDTH) + 1;
+        scrollRectToVisible(getCellRect(row, col, true));
+    }
+    
 }

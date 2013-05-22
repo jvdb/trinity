@@ -58,6 +58,16 @@ public class CodeView extends JTextPane {
         getHighlighter().removeAllHighlights();
     }
     
+    public void setViewable(Selection selection) {
+        try {
+            scrollRectToVisible(modelToView(selection.field == null ? selection.structure.structureLocation.getOffset() : selection.field.sourceLocation.getOffset()));
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void colorize(HashMap<String, Set<Region>> map) {
         for (String k : map.keySet()) {
             if (_colors.containsKey(k)) {

@@ -207,7 +207,10 @@ public class MainFrame extends JFrame {
         if (_current != null) {
             if (_hexView.getSelectedColumn() > 0 && _hexView.getSelectedColumn() <= HexViewTableModel.WIDTH) {
                 int offset = (_hexView.getSelectedRow() * HexViewTableModel.WIDTH) + (_hexView.getSelectedColumn() - 1);
-                setHighlights(_current.getDataMatch(offset));
+                Selection s = _current.getDataMatch(offset);
+                _codeView.setViewable(s);
+                _sentenceView.setViewable(s);
+                setHighlights(s);
             } else {
                 setHighlights(new Selection(null));
             }
@@ -217,6 +220,10 @@ public class MainFrame extends JFrame {
     private void handleCodeSelection() {
         if (_current != null) {
             Selection[] selections = _current.getCodeMatches(_codeView.getCaretPosition());
+            if (selections.length > 0) {
+                _hexView.setViewable(selections[0]);
+                _sentenceView.setViewable(selections[0]);
+            }
             setHighlights(selections);
         }
     }
@@ -224,16 +231,18 @@ public class MainFrame extends JFrame {
     private void handleSentenceSelection() {
         if (_current != null) {
             TreePath selection = _sentenceView.getSelectionPath();
+            Selection s = null;
             if (selection.getPathCount() == 2) {
                 StructureMatch structure = ((StructureMatch)selection.getLastPathComponent());
-                setHighlights(new Selection(structure));
+                s = new Selection(structure);
             } else if (selection.getPathCount() == 3) {
                 StructureMatch structure = (StructureMatch)selection.getPathComponent(1);
                 FieldMatch field = (FieldMatch)selection.getPathComponent(2);
-                setHighlights(new Selection(structure, field));
-            } else {
-                setHighlights(new Selection(null));
+                s = new Selection(structure, field);
             }
+            _hexView.setViewable(s);
+            _codeView.setViewable(s);
+            setHighlights(s);
         }
     }
     
