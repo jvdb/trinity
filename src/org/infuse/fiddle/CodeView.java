@@ -59,12 +59,14 @@ public class CodeView extends JTextPane {
     }
     
     public void setViewable(Selection selection) {
-        try {
-            scrollRectToVisible(modelToView(selection.field == null ? selection.structure.structureLocation.getOffset() : selection.field.sourceLocation.getOffset()));
-        } catch (UnsupportedOperationException e) {
-            e.printStackTrace();
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+        if (selection != null) {
+            try {
+                scrollRectToVisible(modelToView(selection.field == null ? selection.structure.structureLocation.getOffset() : selection.field.sourceLocation.getOffset()));
+            } catch (UnsupportedOperationException e) {
+                e.printStackTrace();
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
         }
     }
     

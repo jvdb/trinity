@@ -212,7 +212,7 @@ public class MainFrame extends JFrame {
                 _sentenceView.setViewable(s);
                 setHighlights(s);
             } else {
-                setHighlights(new Selection(null));
+                setHighlights((Selection)null);
             }
         }
     }
@@ -249,7 +249,7 @@ public class MainFrame extends JFrame {
     private void setHighlights(Selection... selections) {
         clearHighlights();
         for (Selection selection : selections) {
-            if (selection.structure != null) {
+            if (selection != null && selection.structure != null) {
                 try {
                     _hexView.addHighlight(selection.structure);
                     _codeView.addHighlight(selection.structure);

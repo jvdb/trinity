@@ -37,7 +37,9 @@ public class SentenceViewTree extends JTree {
     }
     
     public void setViewable(Selection selection) {
-        makeVisible(((SentenceViewTreeModel)getModel()).getPathToRoot(selection.field == null ? selection.structure : selection.field));
+        if (selection != null) {
+            makeVisible(((SentenceViewTreeModel)getModel()).getPathToRoot(selection.field == null ? selection.structure : selection.field));
+        }
     }
     
 }
