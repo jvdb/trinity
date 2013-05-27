@@ -178,7 +178,8 @@ public class MainFrame extends JFrame {
                 if (_dataFile != null) {
                     _current = _interpreter.run(_codeFile.getPath(), _dataFile.getPath());
                     setTitle(_codeFile.getName() + " on " + _dataFile.getName() + " results in: " + (_current.isValidated ? "Validated!" : "Not validated!"));
-                    ((HexViewTableModel) _hexView.getModel()).setFile(_dataFile);
+                    ((HexViewTableModel)_hexView.getModel()).setFile(_dataFile);
+                    _hexView.addCoverage(_current);
                     _hexView.revalidate();
                     _sentenceView.setModel(new SentenceViewTreeModel(_dataFile.getName(), _current.matches));
                     _sentenceView.revalidate();

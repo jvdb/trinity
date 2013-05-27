@@ -58,6 +58,12 @@ public class HexViewTable extends JTable {
         _renderer.addFieldHighlight(field.inputLocation.getOffset(), field.inputLocation.getLength());
     }
     
+    public void addCoverage(Sentence sentence) {
+        for (StructureMatch s : sentence.matches) {
+            _renderer.addCoverage(s.inputLocation.getOffset(), s.inputLocation.getLength());
+        }
+    }
+    
     public void setViewable(Selection selection) {
         if (selection != null) {
             int offset = selection.field == null ? selection.structure.inputLocation.getOffset() : selection.field.inputLocation.getOffset();

@@ -1,5 +1,6 @@
 package org.infuse.fiddle;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,12 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     
     private final List<Selection> _structures;
     private final List<Selection> _fields;
+    private final List<Selection> _all;
     
     public HexViewTableCellRenderer() {
         _structures = new ArrayList<Selection>();
         _fields = new ArrayList<Selection>();
+        _all = new ArrayList<Selection>();
     }
     
     private class Selection {
@@ -38,12 +41,21 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         c.setForeground(MainFrame.FG);
+        c.setBackground(MainFrame.BG);
         if (column < 1 || column > HexViewTableModel.WIDTH) {
-            c.setBackground(MainFrame.BG);
             return c;
         }
         int offset = (row * HexViewTableModel.WIDTH) + (column - 1);
-        c.setBackground(MainFrame.BG);
+        boolean covered = false;
+        for (Selection s : _all) {
+            if (s.in(offset)) {
+                covered = true;
+            }
+        }
+        if (!covered) {
+            c.setForeground(Color.RED);
+            return c;
+        }
         for (Selection s : _structures) {
             if (s.in(offset)) {
                 c.setBackground(MainFrame.BG_SEL1);
@@ -63,6 +75,10 @@ public class HexViewTableCellRenderer extends DefaultTableCellRenderer {
     
     public void addFieldHighlight(int offset, int length) {
         _fields.add(new Selection(offset, length));
+    }
+    
+    public void addCoverage(int offset, int length) {
+        _all.add(new Selection(offset, length));
     }
     
     public void clearHighlights() {
