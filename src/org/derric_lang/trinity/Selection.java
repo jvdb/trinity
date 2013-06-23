@@ -1,4 +1,4 @@
-package org.infuse.trinity;
+package org.derric_lang.trinity;
 
 import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.StructureMatch;

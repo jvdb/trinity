@@ -4,7 +4,7 @@ Bundle-Name: trinity
 Bundle-SymbolicName: trinity
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: trinity.jar
-Export-Package: org.infuse.trinity
+Export-Package: org.derric_lang.trinity
 Require-Bundle: rascal;bundle-version="0.5.4",
  org.eclipse.imp.pdb.values;bundle-version="0.3.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

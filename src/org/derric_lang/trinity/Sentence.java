@@ -1,4 +1,4 @@
-package org.infuse.trinity;
+package org.derric_lang.trinity;
 
 import java.util.ArrayList;
 import java.util.List;
