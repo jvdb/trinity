@@ -1,4 +1,4 @@
-package org.infuse.fiddle;
+package org.infuse.trinity;
 
 import java.awt.Font;
 import java.io.IOException;

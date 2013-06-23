@@ -1,12 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: fiddle
-Bundle-SymbolicName: fiddle
+Bundle-Name: trinity
+Bundle-SymbolicName: trinity
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: fiddle.jar,
- lib/JXTextPane.jar,
- lib/swingx-1.6.1.jar
-Export-Package: org.infuse.fiddle
+Bundle-ClassPath: trinity.jar
+Export-Package: org.infuse.trinity
 Require-Bundle: rascal;bundle-version="0.5.4",
  org.eclipse.imp.pdb.values;bundle-version="0.3.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

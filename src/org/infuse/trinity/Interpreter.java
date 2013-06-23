@@ -1,4 +1,4 @@
-package org.infuse.fiddle;
+package org.infuse.trinity;
 
 import java.io.File;
 import java.io.PrintWriter;

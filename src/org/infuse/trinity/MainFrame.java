@@ -1,4 +1,4 @@
-package org.infuse.fiddle;
+package org.infuse.trinity;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -71,7 +71,7 @@ public class MainFrame extends JFrame {
     
     private void initGUI() throws IOException {
         // Main window
-        setTitle("Fiddle");
+        setTitle("Trinity");
         setSize(800, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

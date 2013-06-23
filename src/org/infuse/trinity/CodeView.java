@@ -1,4 +1,4 @@
-package org.infuse.fiddle;
+package org.infuse.trinity;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,7 +15,7 @@ import javax.swing.text.StyleContext;
 
 import org.derric_lang.validator.interpreter.FieldMatch;
 import org.derric_lang.validator.interpreter.StructureMatch;
-import org.infuse.fiddle.Interpreter.Region;
+import org.infuse.trinity.Interpreter.Region;
 
 @SuppressWarnings("serial")
 public class CodeView extends JTextPane {
