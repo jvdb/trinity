@@ -2,17 +2,21 @@
 
 Trinity is an integrated development/debugging environment (IDE) for [Derric](http://derric-lang.org/), a domain-specific language to declaratively describe binary file formats. It provides automatic synchronization in the user interface between individual bytes in the input data and elements in the Derric source code.
 
+## Screencast ##
+
+To get an overview of the key features of Trinity, we have created [a screencast](https://vimeo.com/69077052).
+
 ## Installing ##
 
 Trinity is a Java/Swing application. However, it depends on the [Derric compiler](http://github.com/jvdb/derric), which was written in [Rascal](http://www.rascal-mpl.org/). So to be able to install and run Trinity, Derric and Rascal must be installed first:
 
-* To install Rascal, follow the [instructions on the Rascal site](http://www.rascal-mpl.org/Rascal/EclipseUpdate), with one additional note: do not check out the latest version of Rascal, but instead [release 0.5.3](https://github.com/cwi-swat/rascal/tree/release_0.5.3), which is the most recent full release.
-* When Rascal is installed, run an Eclipse instance with Rascal enabled. In it, open the latest version of the [Derric compiler](http://github.com/jvdb/derric), which is simply the master branch.
-* In the same workspace, also open the latest version of [Trinity](http://github.com/jvdb/trinity), which is also the master branch.
+* To install Rascal, follow the [instructions on the Rascal site](http://www.rascal-mpl.org/Rascal/EclipseUpdate).
+* When Rascal is installed, run an Eclipse instance with Rascal enabled. In it, open the latest version of the [Derric compiler](http://github.com/jvdb/derric).
+* In the same workspace, also open the latest version of [Trinity](http://github.com/jvdb/trinity).
 
 ## Running the IDE ##
 
-To run the IDE, simply execute the `org.derric_lang.trinity.Main` class as a Java application in Eclipse.
+To run the IDE, go to the `trinity` project and execute the `org.derric_lang.trinity.Main` class as a Java application in Eclipse.
 
 ## License ##
 Copyright 2013 Netherlands Forensic Institute and Centrum Wiskunde & Informatica
